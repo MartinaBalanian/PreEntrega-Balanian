@@ -1,75 +1,124 @@
-alert("Bienvenido a Nuwa, box de CROSSFIT");
-alert(
-  "En NUWA podés encontrar múltiples entrenamientos y programaciones pensadas para que logres tus objetivos sin dejar de entrenar en grupo."
-);
+const carrito = JSON.parse(localStorage.getItem("carrito")) || [];
 
-let nombreIngresado;
-do {
-  nombreIngresado = prompt(
-    "Porfavor, ingrese su nombre y apellido para continuar."
-  );
-  if (!isNaN(nombreIngresado)) {
-    alert("Por favor ingrese un nombre valido");
+const productos = [
+  {
+    id: "Soga",
+    titulo: "Soga",
+    precio: 16700,
+    img: "./assets/LUGPE3806.JPG",
+  },
+  {
+    id: "Medias",
+    titulo: "Medias",
+    precio: 6400,
+    img: "./assets/MZSUE5547.JPG",
+  },
+  {
+    id: "Top",
+    titulo: "Top",
+    precio: 24900,
+    img: "./assets/LOBKE2160.JPG",
+  },
+  {
+    id: "Tape",
+    titulo: "Tape",
+    precio: 2400,
+    img: "./assets/MNUEE2649.JPG",
+  },
+  {
+    id: "Remera",
+    titulo: "Remera",
+    precio: 19300,
+    img: "./assets/IMG_1934.PNG",
+  },
+  {
+    id: "Conjunto",
+    titulo: "Conjunto",
+    precio: 32200,
+    img: "./assets/IMG_1935.PNG",
+  },
+];
+
+const contenedorProductos = document.querySelector("#productos");
+const carritoVacio = document.querySelector("#carrito-vacio");
+// const carritoComprado = document.querySelector("#carrito-comprado")
+const carritoProductos = document.querySelector("#carrito-productos");
+const carritoTotal = document.querySelector("#carrito-total");
+
+productos.forEach((producto) => {
+  let div = document.createElement("div");
+  div.classList.add("producto");
+  div.innerHTML = `
+    <img class="producto-img" src="${producto.img}">
+    <h3>${producto.titulo}</h3>
+    <p>$${producto.precio}</p>
+    `;
+
+  let button = document.createElement("button");
+  button.classList.add("producto-btn");
+  button.innerText = "Agregar al carrito";
+  button.addEventListener("click", () => {
+    agregarAlCarrito(producto);
+  });
+
+  div.append(button);
+  contenedorProductos.append(div);
+});
+
+const actualizarCarrito = () => {
+  if (carrito.length === 0) {
+    carritoVacio.classList.remove("d-none");
+    carritoProductos.classList.add("d-none");
   } else {
-    alert(
-      nombreIngresado +
-        " elegí tu objetivo, cada vez que vengas a entrenar te vamos a recomendar la combinación perfecta de nuestros entrenamientos para que alcances tu objetivo. "
-    );
+    carritoVacio.classList.add("d-none");
+    carritoProductos.classList.remove("d-none");
+
+    carritoProductos.innerHTML = "";
+    carrito.forEach((producto) => {
+      let div = document.createElement("div");
+      div.classList.add("carrito-producto");
+      div.innerHTML = `
+            <h3>${producto.titulo}</h3>
+            <p>$${producto.precio}</p>
+            <p>Cant: ${producto.cantidad}</p>
+            `;
+
+      let button = document.createElement("button");
+      button.classList.add("carrito-producto-btn");
+      button.innerText = "X";
+      button.addEventListener("click", () => {
+        borrarDelCarrito(producto);
+      });
+      div.append(button);
+      carritoProductos.append(div);
+    });
   }
-} while (nombreIngresado === null || !isNaN(nombreIngresado));
+  actualizarTotal();
+  localStorage.setItem("carrito", JSON.stringify(carrito));
+};
 
-function reservarClase() {
-  let input;
-  do {
-    input = parseFloat(
-      prompt(
-        "Selecciona que clase te gustaria reservar: \n1. Crossfit \n2. Funcional \n3. Gap"
-      )
-    );
-    if (input <= 3) {
-      alert("Clase registrada con exito");
-    } else if (isNaN(input) || parseFloat(input)) {
-      alert("ingrese un numero valido");
-    }
-  } while (isNaN(input) || input > 3);
-  return input;
-}
-let claseUno = reservarClase();
-
-let reservaDias = [];
-
-let diaReservado;
-let clasesReservadas;
-
-do {
-  diaReservado = prompt(
-    'Ingresa el dia que te gustaria reservar, para finalizar ingresa "SALIR" .'
-  );
-  if (!isNaN(diaReservado) || diaReservado === null) {
-    alert("ingrese un dia valido");
-  } else if (diaReservado.toUpperCase() !== "SALIR") {
-    clasesReservadas = parseInt(prompt("Ingresa la cantidad de clases que te gustaria reservar en el mes"));
-    
-    let nuwaReservas = {
-      dia: diaReservado,
-      clases: clasesReservadas,
-    };
-    reservaDias.push(nuwaReservas);
-    console.log(reservaDias);
+const agregarAlCarrito = (producto) => {
+  const itemEncontrado = carrito.find((item) => item.id === producto.id);
+  if (itemEncontrado) {
+    itemEncontrado.cantidad++;
+  } else {
+    carrito.push({ ...producto, cantidad: 1 });
   }
-} while (diaReservado.toUpperCase() !== "SALIR" ||diaReservado === null ||!isNaN(diaReservado) ||clasesReservadas == NaN);
+  actualizarCarrito();
+};
 
-console.log("Nuevo usuario registrado: " + nombreIngresado);
+const borrarDelCarrito = (producto) => {
+  const prodIndex = carrito.findIndex((item) => item.id === producto.id);
+  carrito.splice(prodIndex, 1);
+  actualizarCarrito();
+};
 
-if (claseUno == 1) {
-  console.log(
-    nombreIngresado + "tu clase de Crossfit fue registrada con exito"
+const actualizarTotal = () => {
+  const total = carrito.reduce(
+    (acc, prod) => acc + prod.precio * prod.cantidad,
+    0
   );
-} else if (claseUno == 2) {
-  console.log(
-    nombreIngresado + " tu clase de Funcional fue registrada con exito"
-  );
-} else if (claseUno == 3) {
-  console.log(nombreIngresado + " tu clase de Gap fue registrada con exito");
-}
+  carritoTotal.innerText = `$${total}`;
+};
 
+actualizarCarrito();
