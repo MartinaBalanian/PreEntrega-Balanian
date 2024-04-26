@@ -1,0 +1,38 @@
+[
+  {
+    "id": "Soga",
+    "titulo": "Soga",
+    "precio": 16700,
+    "img": "./assets/LUGPE3806.JPG"
+  },
+  {
+    "id": "Medias",
+    "titulo": "Medias",
+    "precio": 6400,
+    "img": "./assets/MZSUE5547.JPG"
+  },
+  {
+    "id": "Top",
+    "titulo": "Top",
+    "precio": 24900,
+    "img": "./assets/LOBKE2160.JPG"
+  },
+  {
+    "id": "Tape",
+    "titulo": "Tape",
+    "precio": 2400,
+    "img": "./assets/MNUEE2649.JPG"
+  },
+  {
+    "id": "Remera",
+    "titulo": "Remera",
+    "precio": 19300,
+    "img": "./assets/LUGPE3806.JPG"
+  },
+  {
+    "id": "Conjunto",
+    "titulo": "Conjunto",
+    "precio": 32200,
+    "img": "./assets/remera.PNG"
+  }
+]
